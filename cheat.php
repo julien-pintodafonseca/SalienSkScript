@@ -333,22 +333,14 @@ do
 		}
 		while( BossSleep( $c ) );
 		
-		$Data = SendPOST( 'ITerritoryControlMinigameService/GetPlayerInfo', 'access_token=' . $Token );
-		
-		if( isset( $Data[ 'response' ][ 'score' ] ) )
+		if( $MyScoreInBoss > 0 )
 		{
 			Msg(
 				'++ Your Score after Boss battle: {lightred}' . number_format( $MyScoreInBoss ) .
-				'{yellow} (+' . number_format( $MyScoreInBoss - $OldScore ) . ')' .
-				'{normal} - Level: {green}' . $Data[ 'response' ][ 'level' ]
+				'{yellow} (+' . number_format( $MyScoreInBoss - $OldScore ) . ')'
 			);
 			
 			$OldScore = $MyScoreInBoss;
-		}
-		
-		if( isset( $Data[ 'response' ][ 'active_boss_game' ] ) )
-		{
-			SendPOST( 'IMiniGameService/LeaveGame', 'access_token=' . $Token . '&gameid=' . $Data[ 'response' ][ 'active_boss_game' ] );
 		}
 		
 		continue;
