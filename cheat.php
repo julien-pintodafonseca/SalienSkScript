@@ -125,7 +125,7 @@ do
 		{
 			Msg( '{green}-- I support Hentai! steam group and represent it in game:' );
 			Msg( '{green}--{yellow} https://steamcommunity.com/groups/hentaii' );
-			Msg( '{green}-- If you want to support iy, join the group and set us as your clan on' );
+			Msg( '{green}-- Join the group and set us as your clan on' );
 			Msg( '{green}--{yellow} https://steamcommunity.com/saliengame/play' );
 			Msg( '{green}-- SalienSkScript starts!' );
 		}
@@ -133,7 +133,7 @@ do
 		
 		Msg( '{green}-- I support Hentai! steam group and represent it in game:' );
 		Msg( '{green}--{yellow} https://steamcommunity.com/groups/hentaii' );
-		Msg( '{green}-- If you want to support iy, join the group and set us as your clan on' );
+		Msg( '{green}-- Join the group and set us as your clan on' );
 		Msg( '{green}--{yellow} https://steamcommunity.com/saliengame/play' );
 		Msg( '{green}-- SalienSkScript starts!' );
 
@@ -892,7 +892,7 @@ function ExecuteRequest( $Method, $URL, $Data = [] )
 
 				Msg( '{green}I support Hentai! steam group and represent it in game !' );
 				Msg( '{yellow}https://steamcommunity.com/groups/hentaii' );
-				Msg( '{green}If you want to support it, join the group and set us as your clan on' );
+				Msg( '{green}Join the group and set us as your clan on' );
 				Msg( '{yellow}https://steamcommunity.com/saliengame/play' );
 
 				sleep( 10 );
