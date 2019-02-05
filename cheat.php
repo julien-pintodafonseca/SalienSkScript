@@ -204,26 +204,28 @@ do
 
 		// Avoid first time not sync error
 		sleep( 4 );
-
+		
 		$BossFailsAllowed = 10;
 		$NextHeal = microtime( true ) + mt_rand( 120, 180 );
-
+		$NextHeal = PHP_INT_MAX;
+		$WaitingForPlayers = true;
+		
 		do
 		{
 			$UseHeal = 0;
-			$DamageToBoss = 1;
+			$DamageToBoss = $WaitingForPlayers ? 0 : 1;
 			$DamageTaken = 0;
-
+			
 			if( microtime( true ) >= $NextHeal )
 			{
 				$UseHeal = 1;
 				$NextHeal = microtime( true ) + 120;
-
+				
 				Msg( '{teal}@@ Using heal ability' );
 			}
-
+			
 			$Data = SendPOST( 'ITerritoryControlMinigameService/ReportBossDamage', 'access_token=' . $Token . '&use_heal_ability=' . $UseHeal . '&damage_to_boss=' . $DamageToBoss . '&damage_taken=' . $DamageTaken );
-
+			
 			if( $Data[ 'eresult' ] == 11 )
 			{
 				Msg( '{green}@@ Got invalid state, restarting...' );
@@ -243,16 +245,29 @@ do
 
 				break;
 			}
-
+			
+			if( $Data[ 'response' ][ 'waiting_for_players' ] )
+			{
+				$WaitingForPlayers = true;
+				Msg( '{green}@@ Waiting for players...' );
+				continue;
+			}
+			
+			else if( $WaitingForPlayers )
+			{
+				$WaitingForPlayers = false;
+				$NextHeal = microtime( true ) + mt_rand( 0, 120 );
+			}
+			
 			if( empty( $Data[ 'response' ][ 'boss_status' ] ) )
 			{
 				Msg( '{green}@@ Waiting...' );
 				continue;
 			}
-
+			
 			// Strip names down to basic ASCII.
 			$RegMask = '/[\x00-\x1F\x7F-\xFF]/';
-
+			
 			usort( $Data[ 'response' ][ 'boss_status' ][ 'boss_players' ], function( $a, $b ) use ( $AccountID, $RegMask )
 			{
 				if( $a[ 'accountid' ] == $AccountID )
@@ -263,7 +278,7 @@ do
 				{
 					return -1;
 				}
-
+				
 				return strcmp( preg_replace( $RegMask, '', $a['name'] ), preg_replace( $RegMask, '', $b['name'] ) );
 			} );
 
@@ -291,30 +306,24 @@ do
 					]
 				);
 			}
-
+			
 			if( $Data[ 'response' ][ 'game_over' ] )
 			{
 				Msg( '{green}@@ Boss battle is over.' );
-
+				
 				$BestPlanetAndZone = 0;
 				$LastKnownPlanet = 0;
 
 				break;
 			}
-
-			if( $Data[ 'response' ][ 'waiting_for_players' ] )
-			{
-				Msg( '{green}@@ Waiting for players...' );
-				continue;
-			}
-
+			
 			if( $MyPlayer !== null )
 			{
 				Msg( '@@ Started XP: ' . number_format( $MyPlayer[ 'score_on_join' ] ) . ' {teal}(L' . $MyPlayer[ 'level_on_join' ] . '){normal} - Current XP: {yellow}' . number_format( $MyPlayer[ 'score_on_join' ] + $MyPlayer[ 'xp_earned' ] ) . ' ' . ( $MyPlayer[ 'level_on_join' ] != $MyPlayer[ 'new_level' ] ? '{green}' : '{teal}' ) . '(L' . $MyPlayer[ 'new_level' ] . ')' );
 			}
-
+			
 			Msg( '@@ Boss HP: {green}' . number_format( $Data[ 'response' ][ 'boss_status' ][ 'boss_hp' ] ) . '{normal} / {lightred}' .  number_format( $Data[ 'response' ][ 'boss_status' ][ 'boss_max_hp' ] ) . '{normal} - Lasers: {yellow}' . $Data[ 'response' ][ 'num_laser_uses' ] . '{normal} - Team Heals: {green}' . $Data[ 'response' ][ 'num_team_heals' ] );
-
+			
 			echo PHP_EOL;
 		}
 		while( BossSleep( $c ) );
