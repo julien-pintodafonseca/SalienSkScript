@@ -1018,30 +1018,15 @@ function GetAccountName( $SteamID )
 	if( PHP_INT_SIZE === 8)
 	{
 		$xml = simplexml_load_file("http://steamcommunity.com/profiles/".$SteamID."/?xml=1");
-		if(!empty($xml))
-		{
-			return $xml->steamID;
-		}
-		else
-		{
-			return 0;
-		}
-		
-		return trim( preg_replace( $RegMask, '', $Persona_Name ) );
 	}
 	else if( function_exists( 'gmp_and' ) )
 	{
 		$xml = simplexml_load_file("http://steamcommunity.com/profiles/".gmp_and( $SteamID )."/?xml=1");
-		if(!empty($xml))
-		{
-			return $xml->steamID;
-		}
-		else
-		{
-			return 0;
-		}
-		
-		return trim( preg_replace( $RegMask, '', $Persona_Name ) );
+	}
+	
+	if(!empty($xml))
+	{
+		return trim( preg_replace( $RegMask, '', $xml->steamID ) );
 	}
 	
 	return 0;
