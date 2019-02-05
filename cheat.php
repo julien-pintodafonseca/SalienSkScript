@@ -238,9 +238,6 @@ do
 			{
 				Msg( '{green}@@ Got invalid state, restarting...' );
 				
-				$BestPlanetAndZone = 0;
-				$LastKnownPlanet = 0;
-				
 				break;
 			}
 			
@@ -248,10 +245,13 @@ do
 			{
 				Msg( '{green}@@ Boss battle errored too much, restarting...' );
 				
-				$BestPlanetAndZone = 0;
-				$LastKnownPlanet = 0;
-				
 				break;
+			}
+			
+			if( empty( $Data[ 'response' ][ 'boss_status' ] ) )
+			{
+				Msg( '{green}@@ Waiting...' );
+				continue;
 			}
 			
 			if( $Data[ 'response' ][ 'waiting_for_players' ] )
@@ -260,17 +260,10 @@ do
 				Msg( '{green}@@ Waiting for players...' );
 				continue;
 			}
-			
 			else if( $WaitingForPlayers )
 			{
 				$WaitingForPlayers = false;
 				$NextHeal = $Time + random_int( 0, 120 );
-			}
-			
-			if( empty( $Data[ 'response' ][ 'boss_status' ] ) )
-			{
-				Msg( '{green}@@ Waiting...' );
-				continue;
 			}
 			
 			usort( $Data[ 'response' ][ 'boss_status' ][ 'boss_players' ], function( $a, $b ) use( $AccountID )
@@ -329,9 +322,6 @@ do
 				Msg( '{green}@@ Boss battle is over.' );
 				echo PHP_EOL;
 				
-				$BestPlanetAndZone = 0;
-				$LastKnownPlanet = 0;
-				
 				break;
 			}
 			
@@ -342,6 +332,10 @@ do
 			echo PHP_EOL;
 		}
 		while( BossSleep( $c ) );
+		
+		//After a boss battle : reset state and scan again
+		$BestPlanetAndZone = 0;
+		$LastKnownPlanet = 0;
 		
 		if( $MyScoreInBoss > 0 )
 		{
