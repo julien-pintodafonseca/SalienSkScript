@@ -24,4 +24,4 @@ echo The script can be terminated at any time by pressing Ctrl-C
 
 :start
 php\php.exe -f cheat.php
-goto start
+pause
