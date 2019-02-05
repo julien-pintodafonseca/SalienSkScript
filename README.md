@@ -2,14 +2,14 @@
 
 ## First steps
 
-1. Join https://steamcommunity.com/groups/SteamDB (needed to represent captures)
+1. Join https://steamcommunity.com/groups/hentaii (needed to represent captures)
 2. Open https://steamcommunity.com/saliengame/gettoken and save it (<kbd>Ctrl</kbd>+<kbd>S</kbd>) as `token.txt` in the same folder as `cheat.php`
 
 ## PHP
 
 ### Windows
 
-1. [Download this script](https://github.com/SteamDatabase/SalienCheat/archive/master.zip)
+1. [Download this script](https://github.com/SkydeFR/SalienCheat/archive/master.zip)
 2. Extract it into a new folder
 3. Click `cheat.bat` and follow instructions
 
@@ -51,7 +51,7 @@ php cheat.php token2
 
 ### Windows
 
-1. [Download this script](https://github.com/SteamDatabase/SalienCheat/archive/master.zip)
+1. [Download this script](https://github.com/SkydeFR/SalienCheat/archive/master.zip)
 2. Extract it into a new folder
 3. Click `python-cheat.bat` and follow instructions
 
@@ -80,6 +80,6 @@ php cheat.php token2
 
 ## Docker
 1. Extract contents of this script somewhere.
-2. To build: `docker build . -t steamdb/saliencheat`
-3. To run: `docker run -it --init --rm -e TOKEN=<32 character token from gettoken url> steamdb/saliencheat`
+2. To build: `docker build . -t skydefr/saliencheat`
+3. To run: `docker run -it --init --rm -e TOKEN=<32 character token from gettoken url> skydefr/saliencheat`
 4. To stop running, Ctrl+C
