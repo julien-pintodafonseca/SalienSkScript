@@ -45,12 +45,20 @@ else
 		$Token = $ParsedToken[ 'token' ];
 		$AccountID = GetAccountID( $ParsedToken[ 'steamid' ] );
 		$Persona_Name = $ParsedToken[ 'persona_name' ];
+		//GetAccountName( $SteamID )
 		
-		// Strip names down to basic ASCII.
-		$RegMask = '/[\x00-\x1F\x7F-\xFF]/';
-		$Persona_Name = trim( preg_replace( $RegMask, '', $Persona_Name ) );
-		
-		Msg( 'Your SteamID is {teal}' . $ParsedToken[ 'steamid' ] . '{normal} - AccountID is {teal}' . $AccountID );
+		if (isset($Persona_Name))
+		{
+			// Strip names down to basic ASCII.
+			$RegMask = '/[\x00-\x1F\x7F-\xFF]/';
+			$Persona_Name = trim( preg_replace( $RegMask, '', $Persona_Name ) );
+			
+			Msg( 'Your SteamID is {teal}' . $ParsedToken[ 'steamid' ] . '{normal} - AccountID is {teal}' . $AccountID );
+		}
+		else
+		{
+			Msg( 'Your SteamID is {teal} Unknown {normal} - AccountID is {teal}' . $AccountID );
+		}
 		
 		if( $AccountID == 0 && $ParsedToken[ 'steamid' ] > 0 )
 		{
@@ -122,6 +130,7 @@ do
 		Msg( '{green}-- Just join the group and set us as your clan on' );
 		Msg( '{green}--{yellow} https://steamcommunity.com/saliengame/play' );
 		Msg( '{green}-- SalienSkScript starts!' );
+		echo PHP_EOL;
 		
 		// Randomizer is here to help reduce load on Steam servers
 		// Zones are sharded, and if everyone targets the same zone, it ends up worse for everyone
@@ -998,6 +1007,18 @@ function GetAccountID( $SteamID )
 	}
 	
 	return 0;
+}
+
+function GetAccountName( $SteamID )
+{
+    $xml = simplexml_load_file("http://steamcommunity.com/profiles/$SteamID/?xml=1");//link to user xml
+    if(!empty($xml)) {
+        return $xml->steamID;
+    }
+	else
+	{
+		return null;
+	}
 }
 
 function Msg( $Message, $EOL = PHP_EOL, $printf = [] )
