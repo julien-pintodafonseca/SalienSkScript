@@ -144,7 +144,14 @@ do
 		Msg( '{green}--{yellow} https://steamcommunity.com/saliengame/play' );
 		Msg( '{lightred}-- SalienSkScript starts!' );
 		echo PHP_EOL;
+		
+		Msg(
+			'++ Your Score: {teal}' . number_format( $Data[ 'response' ][ 'score' ] ) .
+			'{normal} - Current Level: {teal}' . $Data[ 'response' ][ 'level' ]
+		);
+		echo PHP_EOL;
 	}
+	
 }
 while( !isset( $Data[ 'response' ][ 'score' ] ) && sleep( $FailSleep ) === 0 );
 
