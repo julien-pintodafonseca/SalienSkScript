@@ -210,7 +210,7 @@ do
 		{
 			$Time = microtime( true );
 			$UseHeal = 0;
-			$DamageToBoss = $WaitingForPlayers ? 0 : mt_rand( 1, 40 );
+			$DamageToBoss = $WaitingForPlayers ? 0 : mt_rand( 1, 10 );
 			$DamageTaken = 0;
 			
 			if( $Time >= $NextHeal )
