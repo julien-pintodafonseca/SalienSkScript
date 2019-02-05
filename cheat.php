@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-Msg( "{background-blue}Welcome to SalienCheat" );
+Msg( "{background-blue}Welcome to SalienSkScript" );
 
 set_time_limit( 0 );
 error_reporting( -1 );
@@ -127,7 +127,7 @@ do
 			Msg( '{green}--{yellow} https://steamcommunity.com/groups/hentaii' );
 			Msg( '{green}-- If you want to support iy, join the group and set us as your clan on' );
 			Msg( '{green}--{yellow} https://steamcommunity.com/saliengame/play' );
-			Msg( '{green}-- SalienCheat starts!' );
+			Msg( '{green}-- SalienSkScript starts!' );
 		}
 		*/
 		
@@ -135,7 +135,7 @@ do
 		Msg( '{green}--{yellow} https://steamcommunity.com/groups/hentaii' );
 		Msg( '{green}-- If you want to support iy, join the group and set us as your clan on' );
 		Msg( '{green}--{yellow} https://steamcommunity.com/saliengame/play' );
-		Msg( '{green}-- SalienCheat starts!' );
+		Msg( '{green}-- SalienSkScript starts!' );
 
 		// Randomizer is here to help reduce load on Steam servers
 		// Zones are sharded, and if everyone targets the same zone, it ends up worse for everyone
@@ -824,7 +824,7 @@ function GetCurl( )
 	$c = curl_init( );
 
 	curl_setopt_array( $c, [
-		CURLOPT_USERAGENT      => 'SalienCheat (https://github.com/SteamDatabase/SalienCheat/)',
+		CURLOPT_USERAGENT      => 'SalienSkScript (https://github.com/SkydeFR/SalienSkScript/)',
 		CURLOPT_RETURNTRANSFER => true,
 		CURLOPT_ENCODING       => '', // Let curl decide best encoding on its own
 		CURLOPT_TIMEOUT        => 30,
@@ -932,8 +932,8 @@ function GetRepositoryScriptHash( &$RepositoryScriptETag, $LocalScriptHash )
 	$Time = $Time - ( $Time % 10 );
 
 	curl_setopt_array( $c_r, [
-		CURLOPT_URL            => 'https://raw.githubusercontent.com/SteamDatabase/SalienCheat/master/cheat.php?_=' . $Time,
-		CURLOPT_USERAGENT      => 'SalienCheat (https://github.com/SteamDatabase/SalienCheat/)',
+		CURLOPT_URL            => 'https://raw.githubusercontent.com/SkydeFR/SalienSkScript/master/cheat.php?_=' . $Time,
+		CURLOPT_USERAGENT      => 'SalienSkScript (https://github.com/SkydeFR/SalienSkScript/)',
 		CURLOPT_RETURNTRANSFER => true,
 		CURLOPT_ENCODING       => 'gzip',
 		CURLOPT_TIMEOUT        => 5,
