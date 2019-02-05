@@ -194,7 +194,14 @@ do
 		
 		if( $Zone[ 'eresult' ] != 1 )
 		{
-			Msg( '{lightred}!! Failed to join boss zone, rescanning and restarting...' );
+			if( $ShowMinorErrors )
+			{
+				Msg( '{lightred}!! Failed to join boss zone, rescanning and restarting...' );
+			}
+			else
+			{
+				Msg( '{lightred}-- Zone is overloaded, rescanning...' );
+			}
 			
 			$BestPlanetAndZone = 0;
 			
@@ -222,7 +229,7 @@ do
 		{
 			$Time = microtime( true );
 			$UseHeal = 0;
-			$DamageToBoss = $WaitingForPlayers ? 0 : random_int( 1, 10 );
+			$DamageToBoss = $WaitingForPlayers ? 0 : random_int( 10, 30 );
 			$DamageTaken = 0;
 			
 			if( $Time >= $NextHeal )
@@ -330,7 +337,7 @@ do
 				{
 					if ( $LastXP_Earned > 0 )
 					{
-						Msg('++ XP bonus: {yellow}(+' . number_format( $MyScoreInBoss - $OldScore - $LastXP_Earned ) . ')');
+						Msg('{green}++ XP bonus: {yellow}(+' . number_format( $MyScoreInBoss - $OldScore - $LastXP_Earned ) . ')');
 					}
 					Msg('++ Your XP after Boss battle: {lightred}' . number_format( $MyScoreInBoss ) . ' {yellow}(+' . number_format( $MyScoreInBoss - $OldScore ) . ')');
 					$OldScore = $MyScoreInBoss;
@@ -350,15 +357,13 @@ do
 				$EstBossDPT = ( array_sum( $BossEstimate[ 'DeltHP' ] ) / count( $BossEstimate[ 'DeltHP' ] ) );
 				$EstXPTotal = ( $Data[ 'response' ][ 'boss_status' ][ 'boss_max_hp' ] / $EstBossDPT ) * $EstXPRate;
 				
-				Msg( '@@ Total Damage per Second: {green}' . number_format( $EstBossDPT / 5 ) );
-				Msg( '@@ Estimated Final XP: {lightred}' . number_format( $EstXPTotal ) . '{normal} ({yellow}+' . number_format( $EstXPRate ) . '{normal}/tick excl. bonuses)' );
+				Msg( '@@ Estimated Final XP: {lightred}' . number_format( $EstXPTotal ) . "{normal} ({yellow}+" . number_format( $EstXPRate ) . "{normal}/tick excl. bonuses) - Damage per Second: {green}" . number_format( $EstBossDPT / 5 ) );
 			}
 			
 			$BossEstimate[ 'PrevHP' ] = $Data[ 'response' ][ 'boss_status' ][ 'boss_hp' ];
 			$BossEstimate[ 'PrevXP' ] = ( $MyPlayer !== null ? $MyPlayer[ 'xp_earned' ] : 0 );
 			
 			Msg( '@@ Boss HP: {green}' . number_format( $Data[ 'response' ][ 'boss_status' ][ 'boss_hp' ] ) . '{normal} / {lightred}' .  number_format( $Data[ 'response' ][ 'boss_status' ][ 'boss_max_hp' ] ) . '{normal} - Lasers: {yellow}' . $Data[ 'response' ][ 'num_laser_uses' ] . '{normal} - Team Heals: {green}' . $Data[ 'response' ][ 'num_team_heals' ] );
-			
 			Msg( '{normal}@@ Damage sent: {green}' . $DamageToBoss . '{normal} - ' . ( $UseHeal ? '{green}Used heal ability!' : 'Next heal in {green}' . round( $NextHeal - $Time ) . '{normal} seconds' ) );
 			
 			echo PHP_EOL;
@@ -383,6 +388,10 @@ do
 		if( $ShowMinorErrors )
 		{
 			Msg( '{lightred}!! Failed to join a zone, rescanning and restarting...' );
+		}
+		else
+		{
+			Msg( '{lightred}-- Zone is overloaded, rescanning...' );
 		}
 		
 		$BestPlanetAndZone = 0;
