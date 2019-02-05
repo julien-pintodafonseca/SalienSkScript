@@ -140,10 +140,10 @@ do
 		// Randomizer is here to help reduce load on Steam servers
 		// Zones are sharded, and if everyone targets the same zone, it ends up worse for everyone
 		// By giving errors like time not synced or failed to join.
-		// Everyone at level 16 or above should be able to easily reach their Rank 6 badge without a problem with bosses
+		// Everyone at level 21 or above already has their Rank 6 badge
 		// So please don't change this and let's get this mini game over with
 		/*
-		if( $Data[ 'response' ][ 'level' ] >= 0b10000 )
+		if( $Data[ 'response' ][ 'level' ] >= 21 )
 		{
 			$RandomizeZone = 1;
 
@@ -426,23 +426,26 @@ do
 			'{normal} (' . number_format( GetNextLevelProgress( $Data ) * 100, 2 ) . '%)'
 		);
 
-		$OldScore = $Data[ 'new_score' ];
-		$WaitTimeSeconds = $WaitTime / 60;
-		$Time = ( ( $Data[ 'next_level_score' ] - $Data[ 'new_score' ] ) / GetScoreForZone( [ 'difficulty' => $Zone[ 'difficulty' ] ] ) * $WaitTimeSeconds ) + $WaitTimeSeconds;
-		$Hours = floor( $Time / 60 );
-		$Minutes = $Time % 60;
-		$Date = date_create();
+		if( isset( $Data[ 'next_level_score' ] ) )
+		{
+			$OldScore = $Data[ 'new_score' ];
+			$WaitTimeSeconds = $WaitTime / 60;
+			$Time = ( ( $Data[ 'next_level_score' ] - $Data[ 'new_score' ] ) / GetScoreForZone( [ 'difficulty' => $Zone[ 'difficulty' ] ] ) * $WaitTimeSeconds ) + $WaitTimeSeconds;
+			$Hours = floor( $Time / 60 );
+			$Minutes = $Time % 60;
+			$Date = date_create();
 
-		date_add( $Date, date_interval_create_from_date_string( $Hours . " hours + " . $Minutes . " minutes" ) );
+			date_add( $Date, date_interval_create_from_date_string( $Hours . " hours + " . $Minutes . " minutes" ) );
 
-		Msg(
-			'>> Next Level: {yellow}' . number_format( $Data[ 'next_level_score' ] ) .
-			'{normal} - Remaining: {yellow}' . number_format( $Data[ 'next_level_score' ] - $Data[ 'new_score' ] ) .
-			'{normal} - ETA: {green}' . $Hours . 'h ' . $Minutes . 'm (' . date_format( $Date , "jS H:i T" ) . ')'
-		);
+			Msg(
+				'>> Next Level: {yellow}' . number_format( $Data[ 'next_level_score' ] ) .
+				'{normal} - Remaining: {yellow}' . number_format( $Data[ 'next_level_score' ] - $Data[ 'new_score' ] ) .
+				'{normal} - ETA: {green}' . $Hours . 'h ' . $Minutes . 'm (' . date_format( $Date , "jS H:i T" ) . ')'
+			);
+		}
 
 		/*
-		if( $Data[ 'new_level' ] >= 0b10000 )
+		if( $Data[ 'new_level' ] >= 21 )
 		{
 			$RandomizeZone = 1;
 		}
@@ -479,6 +482,11 @@ function CheckGameVersion( $Data )
 
 function GetNextLevelProgress( $Data )
 {
+	if( !isset( $Data[ 'next_level_score' ] ) )
+	{
+		return 1;
+	}
+	
 	$ScoreTable =
 	[
 		0,       // Level 1
@@ -507,15 +515,15 @@ function GetNextLevelProgress( $Data )
 		24000000, // Level 24
 		26400000, // Level 25
 	];
-
+	
 	$PreviousLevel = $Data[ 'new_level' ] - 1;
-
+	
 	if( !isset( $ScoreTable[ $PreviousLevel ] ) )
 	{
-		Msg( '{lightred}!! Score for next level is unknown, you probably should update the script.' );
+		Msg( '{lightred}!! Score for next level is unknown !!' );
 		return 0;
 	}
-
+	
 	return ( $Data[ 'new_score' ] - $ScoreTable[ $PreviousLevel ] ) / ( $Data[ 'next_level_score' ] - $ScoreTable[ $PreviousLevel ] );
 }
 
