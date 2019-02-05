@@ -2,7 +2,7 @@
 
 ## First steps
 
-1. Join https://steamcommunity.com/groups/hentaii if you want
+1. If you want to support a steam group and represent it in game, just set it as your clan on [saliengame](https://steamcommunity.com/saliengame/play)
 2. Open https://steamcommunity.com/saliengame/gettoken (you need to be logged in to Steam) and save it (<kbd>Ctrl</kbd>+<kbd>S</kbd>) as `token.txt` in the same folder as `cheat.php`
 
 ## PHP
