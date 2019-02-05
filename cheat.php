@@ -271,6 +271,11 @@ do
 				return $b[ 'accountid' ] - $a[ 'accountid' ];
 			} );
 			
+			if( $Data[ 'response' ][ 'game_over' ] )
+			{
+				Msg( '{green}@@ Boss battle is over !' );
+			}
+			
 			$MyPlayer = null;
 			
 			foreach( $Data[ 'response' ][ 'boss_status' ][ 'boss_players' ] as $Player )
@@ -310,7 +315,12 @@ do
 			
 			if( $Data[ 'response' ][ 'game_over' ] )
 			{
-				Msg( '{green}@@ Boss battle is over.' );
+				if( $MyScoreInBoss > 0 )
+				{
+					Msg('++ Your XP after Boss battle: {lightred}' . number_format( $MyScoreInBoss ) . '{yellow} (+' . number_format( $MyScoreInBoss - $OldScore ) . ')');					
+					$OldScore = $MyScoreInBoss;
+				}
+				
 				echo PHP_EOL;
 				
 				break;
@@ -339,21 +349,11 @@ do
 		}
 		while( BossSleep( $c ) );
 		
-		// After a boss battle : reset state and scan again
+		// After a boss battle, reset state and scan again
 		$BestPlanetAndZone = 0;
 		$LastKnownPlanet = 0;
 		
 		unset( $BossEstimate );
-		
-		if( $MyScoreInBoss > 0 )
-		{
-			Msg(
-				'++ Your Score after Boss battle: {lightred}' . number_format( $MyScoreInBoss ) .
-				'{yellow} (+' . number_format( $MyScoreInBoss - $OldScore ) . ')'
-			);
-			
-			$OldScore = $MyScoreInBoss;
-		}
 		
 		continue;
 	}
