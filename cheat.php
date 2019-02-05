@@ -101,7 +101,7 @@ $RandomizeZone = 0;
 
 if( ini_get( 'precision' ) < 18 )
 {
-	Msg( '{teal}Fixed php float precision (was ' . ini_get( 'precision' ) . ')' );
+	//Msg( '{teal}Fixed php float precision (was ' . ini_get( 'precision' ) . ')' );
 	ini_set( 'precision', '18' );
 }
 
@@ -112,34 +112,44 @@ do
 	if( isset( $Data[ 'response' ][ 'score' ] ) )
 	{
 		$OldScore = $Data[ 'response' ][ 'score' ];
-
+		
+		/*
 		if( !isset( $Data[ 'response' ][ 'clan_info' ][ 'accountid' ] ) )
 		{
 			Msg( '{green}-- You are currently not representing any clan !' );
 			Msg( '{green}-- You can join{yellow} https://steamcommunity.com/groups/hentaii {green}on Steam' );
 
-			SendPOST( 'ITerritoryControlMinigameService/RepresentClan', 'clanid=4777282&access_token=' . $Token );
+			SendPOST( 'ITerritoryControlMinigameService/RepresentClan', 'clanid=103582791429670253&access_token=' . $Token );
 		}
-		else if( $Data[ 'response' ][ 'clan_info' ][ 'accountid' ] != 4777282 )
+		else if( $Data[ 'response' ][ 'clan_info' ][ 'accountid' ] != 103582791429670253 )
 		{
 			Msg( '{green}-- I support Hentai! steam group and represent it in game:' );
 			Msg( '{green}--{yellow} https://steamcommunity.com/groups/hentaii' );
-			Msg( '{green}-- If you want to support us, join the group and set us as your clan on:' );
+			Msg( '{green}-- If you want to support iy, join the group and set us as your clan on' );
 			Msg( '{green}--{yellow} https://steamcommunity.com/saliengame/play' );
 			Msg( '{green}-- SalienCheat starts!' );
 		}
+		*/
+		
+		Msg( '{green}-- I support Hentai! steam group and represent it in game:' );
+		Msg( '{green}--{yellow} https://steamcommunity.com/groups/hentaii' );
+		Msg( '{green}-- If you want to support iy, join the group and set us as your clan on' );
+		Msg( '{green}--{yellow} https://steamcommunity.com/saliengame/play' );
+		Msg( '{green}-- SalienCheat starts!' );
 
 		// Randomizer is here to help reduce load on Steam servers
 		// Zones are sharded, and if everyone targets the same zone, it ends up worse for everyone
 		// By giving errors like time not synced or failed to join.
 		// Everyone at level 16 or above should be able to easily reach their Rank 6 badge without a problem with bosses
 		// So please don't change this and let's get this mini game over with
+		/*
 		if( $Data[ 'response' ][ 'level' ] >= 0b10000 )
 		{
-			//$RandomizeZone = 1;
+			$RandomizeZone = 1;
 
-			//Msg( '{yellow}-- You will be joining random zones to reduce Steam server load and help capture planets faster' );
+			Msg( '{yellow}-- You will be joining random zones to reduce Steam server load and help capture planets faster' );
 		}
+		*/
 	}
 }
 while( !isset( $Data[ 'response' ][ 'score' ] ) && sleep( $FailSleep ) === 0 );
@@ -341,6 +351,7 @@ do
 	$LagAdjustedWaitTime = $WaitTime - $SkippedLagTime;
 	$WaitTimeBeforeFirstScan = $WaitTime - $SkippedLagTime - 10;
 
+	/*
 	if( $UpdateCheck )
 	{
 		if( $LocalScriptHash === $RepositoryScriptHash )
@@ -350,9 +361,10 @@ do
 
 		if( $LocalScriptHash !== $RepositoryScriptHash )
 		{
-			//Msg( '-- {lightred}Script has been updated on GitHub since you started this script, please make sure to update.' );
+			Msg( '-- {lightred}Script has been updated on GitHub since you started this script, please make sure to update.' );
 		}
 	}
+	*/
 
 	Msg( '   {teal}Waiting ' . number_format( $WaitTimeBeforeFirstScan, 3 ) . ' (+' . number_format( $SkippedLagTime, 3 ) . ' second lag) seconds before rescanning planets...' );
 
@@ -429,10 +441,12 @@ do
 			'{normal} - ETA: {green}' . $Hours . 'h ' . $Minutes . 'm (' . date_format( $Date , "jS H:i T" ) . ')'
 		);
 
+		/*
 		if( $Data[ 'new_level' ] >= 0b10000 )
 		{
-			//$RandomizeZone = 1;
+			$RandomizeZone = 1;
 		}
+		*/
 	}
 }
 while( true );
@@ -877,8 +891,9 @@ function ExecuteRequest( $Method, $URL, $Data = [] )
 				echo PHP_EOL;
 
 				Msg( '{green}I support Hentai! steam group and represent it in game !' );
-				Msg( '{green}If you want to support us, join the group:' );
 				Msg( '{yellow}https://steamcommunity.com/groups/hentaii' );
+				Msg( '{green}If you want to support it, join the group and set us as your clan on' );
+				Msg( '{yellow}https://steamcommunity.com/saliengame/play' );
 
 				sleep( 10 );
 			}
