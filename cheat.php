@@ -113,27 +113,8 @@ do
 	{
 		$OldScore = $Data[ 'response' ][ 'score' ];
 		
-		/*
-		if( !isset( $Data[ 'response' ][ 'clan_info' ][ 'accountid' ] ) )
-		{
-			Msg( '{green}-- You are currently not representing any clan !' );
-			Msg( '{green}-- You can join{yellow} https://steamcommunity.com/groups/hentaii {green}on Steam' );
-			
-			SendPOST( 'ITerritoryControlMinigameService/RepresentClan', 'clanid=103582791429670253&access_token=' . $Token );
-		}
-		else if( $Data[ 'response' ][ 'clan_info' ][ 'accountid' ] != 103582791429670253 )
-		{
-			Msg( '{green}-- I support Hentai! steam group and represent it in game:' );
-			Msg( '{green}--{yellow} https://steamcommunity.com/groups/hentaii' );
-			Msg( '{green}-- Join the group and set us as your clan on' );
-			Msg( '{green}--{yellow} https://steamcommunity.com/saliengame/play' );
-			Msg( '{green}-- SalienSkScript starts!' );
-		}
-		*/
-		
-		Msg( '{green}-- I support Hentai! steam group and represent it in game:' );
-		Msg( '{green}--{yellow} https://steamcommunity.com/groups/hentaii' );
-		Msg( '{green}-- Join the group and set us as your clan on' );
+		Msg( '{green}-- If you want to support a steam group and represent it in game:' );
+		Msg( '{green}-- Just join the group and set us as your clan on' );
 		Msg( '{green}--{yellow} https://steamcommunity.com/saliengame/play' );
 		Msg( '{green}-- SalienSkScript starts!' );
 		
@@ -929,9 +910,8 @@ function ExecuteRequest( $Method, $URL, $Data = [] )
 			{
 				echo PHP_EOL;
 				
-				Msg( '{green}I support Hentai! steam group and represent it in game !' );
-				Msg( '{yellow}https://steamcommunity.com/groups/hentaii' );
-				Msg( '{green}Join the group and set us as your clan on' );
+				Msg( '{green}If you want to support a steam group and represent it in game:' );
+				Msg( '{green}Just join the group and set us as your clan on' );
 				Msg( '{yellow}https://steamcommunity.com/saliengame/play' );
 				
 				sleep( 10 );
