@@ -2,6 +2,8 @@ token.txt
 *.swp
 php/
 php.zip
+ansi184/
+ansi184.zip
 python/
 python.zip
 get-pip.py
