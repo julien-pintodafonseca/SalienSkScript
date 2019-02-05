@@ -964,7 +964,16 @@ function ExecuteRequest( $ShowMinorErrors, $Method, $URL, $Data = [] )
 		
 		if( $EResult !== 1 )
 		{
-			if( $ShowMinorErrors && $EResult !== 0 && $EResult !== 10)
+			// EResult 93 : Joined a zone at Xpos and now it's Ypos which is too soon
+			// EResult ? : Boss zone is overloaded
+			// EResult 2 : Zone is overloaded
+			//-----
+			// EResult 27 : EResult.Expired
+			// EResult 11 : EResult.InvalidState
+			// EResult 10 : EResult.Busy
+			// EResult 0 : EResult.Timeout
+			
+			if( $ShowMinorErrors || (  $EResult !== 93 && $EResult !== 2 && $EResult !== 27 && $EResult !== 11 && $EResult !== 10 && $EResult !== 0 ) )
 			{
 				Msg( '{lightred}!! ' . $Method . ' failed - EResult: ' . $EResult . ' - ' . $Data );
 			
@@ -984,17 +993,10 @@ function ExecuteRequest( $ShowMinorErrors, $Method, $URL, $Data = [] )
 				
 				sleep( 10 );
 			}
-			else if( $EResult === 11 || $EResult === 27 ) // EResult.InvalidState || EResult.Expired
+			else if( $EResult === 27 || $EResult === 11 ) // EResult.Expired || EResult.InvalidState
 			{
 				global $LastKnownPlanet;
 				$LastKnownPlanet = 0;
-			}
-			else if( $EResult === 0 ) // Timeout
-			{
-				if( $ShowMinorErrors )
-				{
-					Msg( '{lightred}-- This problem should resolve itself, wait for a couple of minutes' );
-				}
 			}
 			else if( $EResult === 10 ) // EResult.Busy
 			{
@@ -1003,6 +1005,13 @@ function ExecuteRequest( $ShowMinorErrors, $Method, $URL, $Data = [] )
 				Msg( '{lightred}-- Steam is busy...' );
 				
 				sleep( 5 );
+			}
+			else if( $EResult === 0 ) // EResult.Timeout
+			{
+				if( $ShowMinorErrors )
+				{
+					Msg( '{lightred}-- This problem should resolve itself, wait for a couple of minutes' );
+				}
 			}
 		}
 		
