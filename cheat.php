@@ -279,9 +279,12 @@ do
 				return $b[ 'accountid' ] - $a[ 'accountid' ];
 			} );
 			
+			$LastXP_Earned = 0;
+			
 			if( $Data[ 'response' ][ 'game_over' ] )
 			{
 				Msg( '{green}@@ Boss battle is over !' );
+				$LastXP_Earned = $MyPlayer[ 'xp_earned' ];
 			}
 			
 			$MyPlayer = null;
@@ -325,7 +328,11 @@ do
 			{
 				if( $MyScoreInBoss > 0 )
 				{
-					Msg('++ Your XP after Boss battle: {lightred}' . number_format( $MyScoreInBoss ) . '{yellow} (+' . number_format( $MyScoreInBoss - $OldScore ) . ')');					
+					if ( $LastXP_Earned > 0 )
+					{
+						Msg('++ XP bonus: {yellow}(+' . number_format( $MyScoreInBoss - $OldScore - $LastXP_Earned ) . ')');
+					}
+					Msg('++ Your XP after Boss battle: {lightred}' . number_format( $MyScoreInBoss ) . ' {yellow}(+' . number_format( $MyScoreInBoss - $OldScore ) . ')');
 					$OldScore = $MyScoreInBoss;
 				}
 				
@@ -343,7 +350,8 @@ do
 				$EstBossDPT = ( array_sum( $BossEstimate[ 'DeltHP' ] ) / count( $BossEstimate[ 'DeltHP' ] ) );
 				$EstXPTotal = ( $Data[ 'response' ][ 'boss_status' ][ 'boss_max_hp' ] / $EstBossDPT ) * $EstXPRate;
 				
-				Msg( '@@ Estimated Final XP: {lightred}' . number_format( $EstXPTotal ) . "{normal} ({yellow}+" . number_format( $EstXPRate ) . "{normal}/tick excl. bonuses) - Damage per Second: {green}" . number_format( $EstBossDPT / 5 ) );
+				Msg( 'Damage per Second: {green}' . number_format( $EstBossDPT / 5 ) );
+				Msg( '@@ Estimated Final XP: {lightred}' . number_format( $EstXPTotal ) . '{normal} ({yellow}+' . number_format( $EstXPRate ) . '{normal}/tick excl. bonuses)' );
 			}
 			
 			$BossEstimate[ 'PrevHP' ] = $Data[ 'response' ][ 'boss_status' ][ 'boss_hp' ];
