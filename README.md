@@ -13,13 +13,20 @@
 2. Extract it into a new folder
 3. Click `cheat.bat` and follow instructions
 
+If you run in to issues with `cheat.bat` :
+
+1. [Update your powershell](https://www.microsoft.com/en-us/download/details.aspx?id=54616)
+2. Launch Powershell and go to SalienCheat directory using `cd`
+3. Perform `powershell -ExecutionPolicy Unrestricted -File "downloadphp.ps1"`
+3. Click `cheat.bat` and follow instructions
+
 If you are using Windows 7 and you don't have colors :
 
 1. [Download ANSICON](https://github.com/adoxa/ansicon/archive/master.zip)
 2. Extract it into a new folder
 3. Launch Cmd and go to x64 or x86 directory using `cd`
 4. Perform `ansicon.exe -i`
-5. Click `cheat.bat` that should now works with colors !
+5. Click `cheat.bat`, now that should now works with colors !
 
 ### Mac
 
