@@ -709,17 +709,7 @@ function GetPlanetState( $ShowMinorErrors, $Planet, $WaitTime )
 		return false;
 	}
 	
-	usort( $CleanZones, function( $a, $b )
-	{
-		if( $b[ 'difficulty' ] === $a[ 'difficulty' ] )
-		{
-			return $b[ 'zone_position' ] - $a[ 'zone_position' ];
-		}
-		else
-		{
-			return $b[ 'difficulty' ] - $a[ 'difficulty' ];
-		}
-	} );
+	shuffle($CleanZones);
 	
 	return [
 		'high_zones' => $HighZones,
