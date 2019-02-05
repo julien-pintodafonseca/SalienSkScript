@@ -46,6 +46,10 @@ else
 		$AccountID = GetAccountID( $ParsedToken[ 'steamid' ] );
 		$Persona_Name = $ParsedToken[ 'persona_name' ];
 		
+		// Strip names down to basic ASCII.
+		$RegMask = '/[\x00-\x1F\x7F-\xFF]/';
+		$Persona_Name = trim( preg_replace( $RegMask, '', $Persona_Name ) );
+		
 		Msg( 'Your SteamID is {teal}' . $ParsedToken[ 'steamid' ] . '{normal} - AccountID is {teal}' . $AccountID );
 		
 		if( $AccountID == 0 && $ParsedToken[ 'steamid' ] > 0 )
