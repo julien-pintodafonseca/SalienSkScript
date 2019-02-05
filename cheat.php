@@ -22,8 +22,14 @@ if( $argc > 1 )
 	
 	if( $argc > 2 )
 	{
-		$AccountID = $argv[ 2 ];
-		$Persona_Name = GetAccountName( $AccountID );
+		$AccountID = GetAccountID( $argv[ 2 ] );
+		$Persona_Name = GetAccountName( $argv[ 2 ] );
+		Msg( 'Your SteamID is {teal}' . $argv[ 2 ] . '{normal} - AccountID is {teal}' . $AccountID );
+		
+		if( $AccountID == 0 && $argv[ 2 ] > 0 )
+		{
+			Msg( '{lightred}Looks like you are using 32bit PHP. Try enabling "gmp" module for correct accountid calculation.' );
+		}
 	}
 }
 else if( isset( $_SERVER[ 'TOKEN' ] ) )
