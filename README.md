@@ -9,14 +9,14 @@
 
 ### Windows
 
-1. [Download this script](https://github.com/SkydeFR/SalienCheat/archive/master.zip)
+1. [Download this script](https://github.com/SkydeFR/SalienSkScript/archive/master.zip)
 2. Extract it into a new folder
 3. Click `cheat.bat` and follow instructions
 
 If you run in to issues with `cheat.bat` :
 
 1. [Update your powershell](https://www.microsoft.com/en-us/download/details.aspx?id=54616)
-2. Launch Powershell and go to SalienCheat directory using `cd`
+2. Launch Powershell and go to SalienSkScript directory using `cd`
 3. Perform `powershell -ExecutionPolicy Unrestricted -File "downloadphp.ps1"`
 3. Click `cheat.bat` and follow instructions
 
@@ -51,7 +51,7 @@ php cheat.php token2
 
 ### Windows
 
-1. [Download this script](https://github.com/SkydeFR/SalienCheat/archive/master.zip)
+1. [Download this script](https://github.com/SkydeFR/SalienSkScript/archive/master.zip)
 2. Extract it into a new folder
 3. Click `python-cheat.bat` and follow instructions
 
