@@ -23,7 +23,7 @@ If you run in to issues with `cheat.bat` :
 If you are using Windows 7 and you don't have colors :
 
 1. [Download ANSICON](https://github.com/adoxa/ansicon/archive/master.zip)
-2. Extract it into a new folder
+2. Extract it into SalienSkScript folder
 3. Launch Cmd and go to x64 or x86 directory using `cd`
 4. Perform `ansicon.exe -i`
 5. Click `cheat.bat`, now that should now works with colors !
