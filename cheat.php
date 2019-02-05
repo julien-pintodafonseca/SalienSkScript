@@ -400,7 +400,7 @@ do
 		}
 	}
 	
-	Msg( '   {teal}Waiting ' . number_format( $WaitTimeBeforeFirstScan, 3 ) . ' (+' . number_format( $SkippedLagTime, 3 ) . ' second lag) seconds before rescanning planets...' );
+	Msg( '== {teal}Waiting ' . number_format( $WaitTimeBeforeFirstScan, 3 ) . ' (+' . number_format( $SkippedLagTime, 3 ) . ' second lag) seconds before rescanning planets...' );
 	
 	usleep( $WaitTimeBeforeFirstScan * 1000000 );
 	
@@ -412,7 +412,7 @@ do
 	
 	if( $BestPlanetAndZone[ 'best_zone' ][ 'boss_active' ] )
 	{
-		Msg( '{green}Boss detected, abandoning current zone and joining boss...' );
+		Msg( '{green}@@ Boss detected, abandoning current zone and joining boss...' );
 		
 		$LastKnownPlanet = 0;
 		
@@ -423,7 +423,7 @@ do
 	
 	if( $LagAdjustedWaitTime > 0 )
 	{
-		Msg( '   {teal}Waiting ' . number_format( $LagAdjustedWaitTime, 3 ) . ' remaining seconds before submitting score...' );
+		Msg( '== {teal}Waiting ' . number_format( $LagAdjustedWaitTime, 3 ) . ' remaining seconds before submitting score...' );
 		
 		usleep( $LagAdjustedWaitTime * 1000000 );
 	}
@@ -697,7 +697,7 @@ function GetBestPlanetAndZone( $RandomizeZone, $WaitTime, $FailSleep )
 	{
 		if( isset( $Planets[ 'response' ][ 'game_version' ] ) )
 		{
-			Msg( '{green}There are no active planets left! Shutdown SalienSkScript...' );
+			Msg( '{background-blue} There are no active planets left! Shutdown SalienSkScript...' );
 			exit( 0 );
 		}
 		return null;
@@ -834,8 +834,8 @@ function LeaveCurrentGame( $Token, $FailSleep, $LeaveCurrentPlanet = 0 )
 	
 	if( $LeaveCurrentPlanet > 0 && $LeaveCurrentPlanet !== $ActivePlanet )
 	{
-		Msg( '   Leaving planet {green}' . $ActivePlanet . '{normal} because we want to be on {green}' . $LeaveCurrentPlanet );
-		Msg( '   Time accumulated on planet {green}' . $ActivePlanet . '{normal}: {yellow}' . gmdate( 'H\h i\m s\s', $Data[ 'response' ][ 'time_on_planet' ] ) );
+		Msg( '== Leaving planet {green}' . $ActivePlanet . '{normal} because we want to be on {green}' . $LeaveCurrentPlanet );
+		Msg( '== Time accumulated on planet {green}' . $ActivePlanet . '{normal}: {yellow}' . gmdate( 'H\h i\m s\s', $Data[ 'response' ][ 'time_on_planet' ] ) );
 		
 		echo PHP_EOL;
 		
@@ -933,9 +933,9 @@ function ExecuteRequest( $Method, $URL, $Data = [] )
 			{
 				echo PHP_EOL;
 				
-				Msg( '{green}If you want to support a steam group and represent it in game:' );
-				Msg( '{green}Just join the group and set us as your clan on' );
-				Msg( '{yellow}https://steamcommunity.com/saliengame/play' );
+				Msg( '{green}-- If you want to support a steam group and represent it in game:' );
+				Msg( '{green}-- Just join the group and set us as your clan on' );
+				Msg( '{green}-- {yellow}https://steamcommunity.com/saliengame/play' );
 				
 				sleep( 10 );
 			}
