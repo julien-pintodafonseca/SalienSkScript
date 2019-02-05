@@ -350,7 +350,7 @@ do
 				$EstBossDPT = ( array_sum( $BossEstimate[ 'DeltHP' ] ) / count( $BossEstimate[ 'DeltHP' ] ) );
 				$EstXPTotal = ( $Data[ 'response' ][ 'boss_status' ][ 'boss_max_hp' ] / $EstBossDPT ) * $EstXPRate;
 				
-				Msg( 'Damage per Second: {green}' . number_format( $EstBossDPT / 5 ) );
+				Msg( '@@ Total Damage per Second: {green}' . number_format( $EstBossDPT / 5 ) );
 				Msg( '@@ Estimated Final XP: {lightred}' . number_format( $EstXPTotal ) . '{normal} ({yellow}+' . number_format( $EstXPRate ) . '{normal}/tick excl. bonuses)' );
 			}
 			
