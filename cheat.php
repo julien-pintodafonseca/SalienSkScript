@@ -44,6 +44,7 @@ else
 	{
 		$Token = $ParsedToken[ 'token' ];
 		$AccountID = GetAccountID( $ParsedToken[ 'steamid' ] );
+		$Persona_Name = $ParsedToken[ 'persona_name' ];
 		
 		Msg( 'Your SteamID is {teal}' . $ParsedToken[ 'steamid' ] . '{normal} - AccountID is {teal}' . $AccountID );
 		
@@ -63,7 +64,7 @@ if( strlen( $Token ) !== 32 )
 }
 
 $LocalScriptHash = sha1( trim( file_get_contents( __FILE__ ) ) );
-Msg( '{teal}File hash is ' . substr( $LocalScriptHash, 0, 8 ) );
+Msg('Account Name : {teal}' . $Persona_Name . '{normal} - File hash is {teal}' . substr( $LocalScriptHash, 0, 8 ) );
 
 if( isset( $_SERVER[ 'IGNORE_UPDATES' ] ) && (bool)$_SERVER[ 'IGNORE_UPDATES' ] )
 {
