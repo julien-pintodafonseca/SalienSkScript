@@ -72,7 +72,7 @@ php cheat.php token2 accountid2
 
 ## Python
 
-⚠ **Python version currently does not support Boss battles, so you should choose the PHP version.** ⚠
+⚠ **PHP version is more optimized.** ⚠
 
 ### Windows
 
