@@ -679,24 +679,29 @@ function GetPlanetState( $Planet, $RandomizeZone, $WaitTime )
 function GetBestPlanetAndZone( $RandomizeZone, $WaitTime, $FailSleep )
 {
 	$Planets = SendGET( 'ITerritoryControlMinigameService/GetPlanets', 'active_only=1&language=english' );
-
+	
 	CheckGameVersion( $Planets );
-
+	
 	if( empty( $Planets[ 'response' ][ 'planets' ] ) )
 	{
+		if( isset( $Planets[ 'response' ][ 'game_version' ] ) )
+		{
+			Msg( '{green}There are no active planets left! Shutdown SalienSkScript...' );
+			exit( 0 );
+		}
 		return null;
 	}
-
+	
 	$Planets = $Planets[ 'response' ][ 'planets' ];
-
+	
 	usort( $Planets, function( $a, $b )
 	{
 		$a = isset( $a[ 'state' ][ 'boss_zone_position' ] ) ? 1000 : $a[ 'id' ];
 		$b = isset( $b[ 'state' ][ 'boss_zone_position' ] ) ? 1000 : $b[ 'id' ];
-
+		
 		return $b - $a;
 	} );
-
+	
 	foreach( $Planets as &$Planet )
 	{
 		$Planet[ 'sort_key' ] = 0;
