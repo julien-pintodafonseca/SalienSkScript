@@ -3,12 +3,12 @@ cd %~dp0
 setlocal enabledelayedexpansion
 
 if not exist php\php.exe (
-	echo PHP wasn't detected; we'll download and install it for you.
+	echo PHP wasn't detected; we'll download and install it for you
 	PowerShell -ExecutionPolicy Unrestricted -File "downloadphp.ps1"
 )
 
 if not exist php\php.exe (
-	echo Failed to setup php, try doing it manually
+	echo Failed to setup php, update your powershell or try doing it manually
 	pause
 	exit
 )
