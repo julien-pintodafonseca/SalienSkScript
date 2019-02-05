@@ -142,7 +142,7 @@ do
 		Msg( '{green}-- If you want to support a steam group and represent it in game:' );
 		Msg( '{green}-- Just join the group and set us as your clan on' );
 		Msg( '{green}--{yellow} https://steamcommunity.com/saliengame/play' );
-		Msg( '{green}-- SalienSkScript starts!' );
+		Msg( '{lightred}-- SalienSkScript starts!' );
 		echo PHP_EOL;
 	}
 }
