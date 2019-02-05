@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-Msg( "{background-blue}Welcome to SalienCheat for SteamDB" );
+Msg( "{background-blue}Welcome to SalienCheat" );
 
 set_time_limit( 0 );
 error_reporting( -1 );
@@ -115,18 +115,18 @@ do
 
 		if( !isset( $Data[ 'response' ][ 'clan_info' ][ 'accountid' ] ) )
 		{
-			Msg( '{green}-- You are currently not representing any clan, so you are now part of SteamDB' );
-			Msg( '{green}-- Make sure to join{yellow} https://steamcommunity.com/groups/steamdb {green}on Steam' );
+			Msg( '{green}-- You are currently not representing any clan !' );
+			Msg( '{green}-- You can join{yellow} https://steamcommunity.com/groups/hentaii {green}on Steam' );
 
 			SendPOST( 'ITerritoryControlMinigameService/RepresentClan', 'clanid=4777282&access_token=' . $Token );
 		}
 		else if( $Data[ 'response' ][ 'clan_info' ][ 'accountid' ] != 4777282 )
 		{
-			Msg( '{green}-- If you want to support us, join our group' );
-			Msg( '{green}--{yellow} https://steamcommunity.com/groups/steamdb' );
-			Msg( '{green}-- and set us as your clan on' );
+			Msg( '{green}-- I support Hentai! steam group and represent it in game:' );
+			Msg( '{green}--{yellow} https://steamcommunity.com/groups/hentaii' );
+			Msg( '{green}-- If you want to support us, join the group and set us as your clan on:' );
 			Msg( '{green}--{yellow} https://steamcommunity.com/saliengame/play' );
-			Msg( '{green}-- Happy farming!' );
+			Msg( '{green}-- SalienCheat starts!' );
 		}
 
 		// Randomizer is here to help reduce load on Steam servers
@@ -136,9 +136,9 @@ do
 		// So please don't change this and let's get this mini game over with
 		if( $Data[ 'response' ][ 'level' ] >= 0b10000 )
 		{
-			$RandomizeZone = 1;
+			//$RandomizeZone = 1;
 
-			Msg( '{yellow}-- You will be joining random zones to reduce Steam server load and help capture planets faster' );
+			//Msg( '{yellow}-- You will be joining random zones to reduce Steam server load and help capture planets faster' );
 		}
 	}
 }
@@ -350,7 +350,7 @@ do
 
 		if( $LocalScriptHash !== $RepositoryScriptHash )
 		{
-			Msg( '-- {lightred}Script has been updated on GitHub since you started this script, please make sure to update.' );
+			//Msg( '-- {lightred}Script has been updated on GitHub since you started this script, please make sure to update.' );
 		}
 	}
 
@@ -431,7 +431,7 @@ do
 
 		if( $Data[ 'new_level' ] >= 0b10000 )
 		{
-			$RandomizeZone = 1;
+			//$RandomizeZone = 1;
 		}
 	}
 }
@@ -876,9 +876,9 @@ function ExecuteRequest( $Method, $URL, $Data = [] )
 			{
 				echo PHP_EOL;
 
-				Msg( '{green}This script was designed for SteamDB' );
-				Msg( '{green}If you want to support it, join the group and represent it in game:' );
-				Msg( '{yellow}https://steamcommunity.com/groups/SteamDB' );
+				Msg( '{green}I support Hentai! steam group and represent it in game !' );
+				Msg( '{green}If you want to support us, join the group:' );
+				Msg( '{yellow}https://steamcommunity.com/groups/hentaii' );
 
 				sleep( 10 );
 			}
