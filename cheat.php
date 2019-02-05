@@ -266,10 +266,7 @@ do
 				continue;
 			}
 			
-			// Strip names down to basic ASCII.
-			$RegMask = '/[\x00-\x1F\x7F-\xFF]/';
-			
-			usort( $Data[ 'response' ][ 'boss_status' ][ 'boss_players' ], function( $a, $b ) use ( $AccountID, $RegMask )
+			usort( $Data[ 'response' ][ 'boss_status' ][ 'boss_players' ], function( $a, $b ) use( $AccountID )
 			{
 				if( $a[ 'accountid' ] == $AccountID )
 				{
@@ -280,7 +277,7 @@ do
 					return -1;
 				}
 				
-				return strcmp( preg_replace( $RegMask, '', $a['name'] ), preg_replace( $RegMask, '', $b['name'] ) );
+				return $b[ 'accountid' ] - $a[ 'accountid' ];
 			} );
 			
 			$MyPlayer = null;
@@ -294,13 +291,18 @@ do
 				{
 					$MyPlayer = $Player;
 				}
+			
+				// Strip names down to basic ASCII.
+				$RegMask = '/[\x00-\x1F\x7F-\xFF]/';
+				
+				$Name = trim( preg_replace( $RegMask, '', $Player[ 'name' ] ) );
 				
 				Msg(
 					( $IsThisMe ? '{green}@@' : '  ' ) .
 					' %-20s - HP: {yellow}%6s' . $DefaultColor  . ' / %6s - XP Gained: {yellow}%10s' . $DefaultColor,
 					PHP_EOL,
 					[
-						substr( preg_replace( $RegMask, '', $Player[ 'name' ] ), 0, 20 ),
+						empty( $Name ) ? ( '[U:1:' . $Player[ 'accountid' ] . ']' ) : substr( $Name, 0, 20 ),
 						$Player[ 'hp' ],
 						$Player[ 'max_hp' ],
 						number_format( $Player[ 'xp_earned' ] )
