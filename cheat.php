@@ -23,6 +23,7 @@ if( $argc > 1 )
 	if( $argc > 2 )
 	{
 		$AccountID = $argv[ 2 ];
+		$Persona_Name = GetAccountName( $AccountID );
 	}
 }
 else if( isset( $_SERVER[ 'TOKEN' ] ) )
@@ -45,20 +46,12 @@ else
 		$Token = $ParsedToken[ 'token' ];
 		$AccountID = GetAccountID( $ParsedToken[ 'steamid' ] );
 		$Persona_Name = $ParsedToken[ 'persona_name' ];
-		//GetAccountName( $SteamID )
 		
-		if (isset($Persona_Name))
-		{
-			// Strip names down to basic ASCII.
-			$RegMask = '/[\x00-\x1F\x7F-\xFF]/';
-			$Persona_Name = trim( preg_replace( $RegMask, '', $Persona_Name ) );
-			
-			Msg( 'Your SteamID is {teal}' . $ParsedToken[ 'steamid' ] . '{normal} - AccountID is {teal}' . $AccountID );
-		}
-		else
-		{
-			Msg( 'Your SteamID is {teal} Unknown {normal} - AccountID is {teal}' . $AccountID );
-		}
+		// Strip names down to basic ASCII.
+		$RegMask = '/[\x00-\x1F\x7F-\xFF]/';
+		$Persona_Name = trim( preg_replace( $RegMask, '', $Persona_Name ) );
+
+		Msg( 'Your SteamID is {teal}' . $ParsedToken[ 'steamid' ] . '{normal} - AccountID is {teal}' . $AccountID );
 		
 		if( $AccountID == 0 && $ParsedToken[ 'steamid' ] > 0 )
 		{
@@ -76,7 +69,14 @@ if( strlen( $Token ) !== 32 )
 }
 
 $LocalScriptHash = sha1( trim( file_get_contents( __FILE__ ) ) );
-Msg('Account Name : {teal}' . $Persona_Name . '{normal} - File hash is {teal}' . substr( $LocalScriptHash, 0, 8 ) );
+if (isset($Persona_Name) && $Persona_Name !== 0)
+{			
+	Msg('Account Name : {teal}' . $Persona_Name . '{normal} - File hash is {teal}' . substr( $LocalScriptHash, 0, 8 ) );
+}
+else
+{
+	Msg('Account Name : {teal}' . 'Unknown' . '{normal} - File hash is {teal}' . substr( $LocalScriptHash, 0, 8 ) );
+}
 
 if( isset( $_SERVER[ 'IGNORE_UPDATES' ] ) && (bool)$_SERVER[ 'IGNORE_UPDATES' ] )
 {
@@ -307,6 +307,7 @@ do
 			if( $Data[ 'response' ][ 'game_over' ] )
 			{
 				Msg( '{green}@@ Boss battle is over.' );
+				echo PHP_EOL;
 				
 				$BestPlanetAndZone = 0;
 				$LastKnownPlanet = 0;
@@ -1011,14 +1012,39 @@ function GetAccountID( $SteamID )
 
 function GetAccountName( $SteamID )
 {
-    $xml = simplexml_load_file("http://steamcommunity.com/profiles/$SteamID/?xml=1");//link to user xml
-    if(!empty($xml)) {
-        return $xml->steamID;
-    }
-	else
+	// Strip names down to basic ASCII.
+	$RegMask = '/[\x00-\x1F\x7F-\xFF]/';
+	
+	if( PHP_INT_SIZE === 8)
 	{
-		return null;
+		$xml = simplexml_load_file("http://steamcommunity.com/profiles/".$SteamID."/?xml=1");
+		if(!empty($xml))
+		{
+			return $xml->steamID;
+		}
+		else
+		{
+			return 0;
+		}
+		
+		return trim( preg_replace( $RegMask, '', $Persona_Name ) );
 	}
+	else if( function_exists( 'gmp_and' ) )
+	{
+		$xml = simplexml_load_file("http://steamcommunity.com/profiles/".gmp_and( $SteamID )."/?xml=1");
+		if(!empty($xml))
+		{
+			return $xml->steamID;
+		}
+		else
+		{
+			return 0;
+		}
+		
+		return trim( preg_replace( $RegMask, '', $Persona_Name ) );
+	}
+	
+	return 0;
 }
 
 function Msg( $Message, $EOL = PHP_EOL, $printf = [] )
