@@ -351,7 +351,7 @@ do
 	$LagAdjustedWaitTime = $WaitTime - $SkippedLagTime;
 	$WaitTimeBeforeFirstScan = $WaitTime - $SkippedLagTime - 10;
 
-	/*
+
 	if( $UpdateCheck )
 	{
 		if( $LocalScriptHash === $RepositoryScriptHash )
@@ -364,7 +364,7 @@ do
 			Msg( '-- {lightred}Script has been updated on GitHub since you started this script, please make sure to update.' );
 		}
 	}
-	*/
+
 
 	Msg( '   {teal}Waiting ' . number_format( $WaitTimeBeforeFirstScan, 3 ) . ' (+' . number_format( $SkippedLagTime, 3 ) . ' second lag) seconds before rescanning planets...' );
 
