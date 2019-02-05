@@ -209,6 +209,7 @@ do
 		$NextHeal = microtime( true ) + mt_rand( 120, 180 );
 		$NextHeal = PHP_INT_MAX;
 		$WaitingForPlayers = true;
+		$MyScoreInBoss = 0;
 		
 		do
 		{
@@ -319,7 +320,9 @@ do
 			
 			if( $MyPlayer !== null )
 			{
-				Msg( '@@ Started XP: ' . number_format( $MyPlayer[ 'score_on_join' ] ) . ' {teal}(L' . $MyPlayer[ 'level_on_join' ] . '){normal} - Current XP: {yellow}' . number_format( $MyPlayer[ 'score_on_join' ] + $MyPlayer[ 'xp_earned' ] ) . ' ' . ( $MyPlayer[ 'level_on_join' ] != $MyPlayer[ 'new_level' ] ? '{green}' : '{teal}' ) . '(L' . $MyPlayer[ 'new_level' ] . ')' );
+				$MyScoreInBoss = $MyPlayer[ 'score_on_join' ] + $MyPlayer[ 'xp_earned' ];
+				
+				Msg( '@@ Started XP: ' . number_format( $MyPlayer[ 'score_on_join' ] ) . ' {teal}(L' . $MyPlayer[ 'level_on_join' ] . '){normal} - Current XP: {yellow}' . number_format( $MyScoreInBoss ) . ' ' . ( $MyPlayer[ 'level_on_join' ] != $MyPlayer[ 'new_level' ] ? '{green}' : '{teal}' ) . '(L' . $MyPlayer[ 'new_level' ] . ')' );
 			}
 			
 			Msg( '@@ Boss HP: {green}' . number_format( $Data[ 'response' ][ 'boss_status' ][ 'boss_hp' ] ) . '{normal} / {lightred}' .  number_format( $Data[ 'response' ][ 'boss_status' ][ 'boss_max_hp' ] ) . '{normal} - Lasers: {yellow}' . $Data[ 'response' ][ 'num_laser_uses' ] . '{normal} - Team Heals: {green}' . $Data[ 'response' ][ 'num_team_heals' ] );
@@ -333,12 +336,12 @@ do
 		if( isset( $Data[ 'response' ][ 'score' ] ) )
 		{
 			Msg(
-				'++ Your Score after Boss battle: {lightred}' . number_format( $Data[ 'score' ] ) .
-				'{yellow} (+' . number_format( $Data[ 'score' ] - $OldScore ) . ')' .
+				'++ Your Score after Boss battle: {lightred}' . number_format( $MyScoreInBoss ) .
+				'{yellow} (+' . number_format( $MyScoreInBoss - $OldScore ) . ')' .
 				'{normal} - Level: {green}' . $Data[ 'level' ]
 			);
 			
-			$OldScore = $Data[ 'response' ][ 'score' ];
+			$OldScore = $MyScoreInBoss;
 		}
 		
 		if( isset( $Data[ 'response' ][ 'active_boss_game' ] ) )
