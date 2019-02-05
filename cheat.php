@@ -318,10 +318,28 @@ do
 			echo PHP_EOL;
 		}
 		while( BossSleep( $c ) );
+		
+		$Data = SendPOST( 'ITerritoryControlMinigameService/GetPlayerInfo', 'access_token=' . $Token );
+		
+		if( isset( $Data[ 'response' ][ 'score' ] ) )
+		{
+			Msg(
+				'++ Your Score after Boss battle: {lightred}' . number_format( $Data[ 'score' ] ) .
+				'{yellow} (+' . number_format( $Data[ 'score' ] - $OldScore ) . ')' .
+				'{normal} - Level: {green}' . $Data[ 'level' ]
+			);
 
+			$OldScore = $Data[ 'response' ][ 'score' ];
+		}
+		
+		if( isset( $Data[ 'response' ][ 'active_boss_game' ] ) )
+		{
+			SendPOST( 'IMiniGameService/LeaveGame', 'access_token=' . $Token . '&gameid=' . $Data[ 'response' ][ 'active_boss_game' ] );
+		}
+		
 		continue;
 	}
-
+	
 	$Zone = SendPOST( 'ITerritoryControlMinigameService/JoinZone', 'zone_position=' . $BestPlanetAndZone[ 'best_zone' ][ 'zone_position' ] . '&access_token=' . $Token );
 	$PlanetCheckTime = microtime( true );
 
@@ -410,40 +428,41 @@ do
 	if( isset( $Data[ 'response' ][ 'new_score' ] ) )
 	{
 		$Data = $Data[ 'response' ];
-
+		
 		echo PHP_EOL;
-
+		
 		// Store our own old score because the API may increment score while giving an error (e.g. a timeout)
 		if( !$OldScore )
 		{
 			$OldScore = $Data[ 'old_score' ];
 		}
-
+		
 		Msg(
 			'++ Your Score: {lightred}' . number_format( $Data[ 'new_score' ] ) .
 			'{yellow} (+' . number_format( $Data[ 'new_score' ] - $OldScore ) . ')' .
 			'{normal} - Current Level: {green}' . $Data[ 'new_level' ] .
 			'{normal} (' . number_format( GetNextLevelProgress( $Data ) * 100, 2 ) . '%)'
 		);
-
+		
+		$OldScore = $Data[ 'new_score' ];
+		
 		if( isset( $Data[ 'next_level_score' ] ) )
 		{
-			$OldScore = $Data[ 'new_score' ];
 			$WaitTimeSeconds = $WaitTime / 60;
 			$Time = ( ( $Data[ 'next_level_score' ] - $Data[ 'new_score' ] ) / GetScoreForZone( [ 'difficulty' => $Zone[ 'difficulty' ] ] ) * $WaitTimeSeconds ) + $WaitTimeSeconds;
 			$Hours = floor( $Time / 60 );
 			$Minutes = $Time % 60;
 			$Date = date_create();
-
+			
 			date_add( $Date, date_interval_create_from_date_string( $Hours . " hours + " . $Minutes . " minutes" ) );
-
+			
 			Msg(
 				'>> Next Level: {yellow}' . number_format( $Data[ 'next_level_score' ] ) .
 				'{normal} - Remaining: {yellow}' . number_format( $Data[ 'next_level_score' ] - $Data[ 'new_score' ] ) .
 				'{normal} - ETA: {green}' . $Hours . 'h ' . $Minutes . 'm (' . date_format( $Date , "jS H:i T" ) . ')'
 			);
 		}
-
+		
 		/*
 		if( $Data[ 'new_level' ] >= 21 )
 		{
