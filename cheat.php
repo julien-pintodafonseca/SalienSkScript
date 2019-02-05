@@ -964,22 +964,33 @@ function ExecuteRequest( $ShowMinorErrors, $Method, $URL, $Data = [] )
 		
 		if( $EResult !== 1 )
 		{
-			// EResult 93 : Joined a zone at Xpos and now it's Ypos which is too soon
-			// EResult ? : Boss zone is overloaded
-			// EResult 2 : Zone is overloaded
+			// EResult 93 : EResult.TimeNotSynced
+			// EResult 84 : EResult.RateLimitExceeded
+			// EResult 17 : "This is a boss zone. Update your cheats"
+			// EResult 8 : Try to join a non active planet
+			// EResult 2 : Try to join an overloaded zone
 			//-----
 			// EResult 27 : EResult.Expired
 			// EResult 11 : EResult.InvalidState
 			// EResult 10 : EResult.Busy
 			// EResult 0 : EResult.Timeout
 			
-			if( $ShowMinorErrors || (  $EResult !== 93 && $EResult !== 2 && $EResult !== 27 && $EResult !== 11 && $EResult !== 10 && $EResult !== 0 ) )
+			if( $ShowMinorErrors || 
+				(  $EResult !== 93 &&
+				$EResult !== 84 &&
+				$EResult !== 17 &&
+				$EResult !== 8 &&
+				$EResult !== 2 &&
+				$EResult !== 27 &&
+				$EResult !== 11 &&
+				$EResult !== 10 &&
+				$EResult !== 0 ) )
 			{
 				Msg( '{lightred}!! ' . $Method . ' failed - EResult: ' . $EResult . ' - ' . $Data );
 			
 				if( preg_match( '/^[Xx]-error_message: (?:.+)$/m', $Header, $ErrorMessage ) === 1 )
 				{
-					Msg( '{lightred}!! API failed - ' . $ErrorMessage[ 0 ] );
+					Msg( '{lightred}-- ' . $ErrorMessage[ 0 ] );
 				}
 			}
 			
