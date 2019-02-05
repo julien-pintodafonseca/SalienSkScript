@@ -43,8 +43,8 @@ If you are using Windows 7 or older and you don't have colors :
 
 You can also provide token directly in CLI, to ease running multiple accounts:
 ```bash
-php cheat.php token1
-php cheat.php token2
+php cheat.php token1 accountid1
+php cheat.php token2 accountid2
 ```
 
 ### Linux
