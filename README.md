@@ -35,6 +35,13 @@ If you are using Windows 7 or older and you don't have colors :
    6. Check the box `Force ConEmu as default terminal for...`
    7. Save and exit
 
+If you want to disable QuickEdit in Cmd :
+
+1. Launch Cmd and right click on the title bar
+2. Go to `Properties`
+3. Uncheck `QuickEdit Mode`
+4. (optional) If you want to disable it for all future command prompts too, do the same with `Defaults` instead of `Properties`
+
 ### Mac
 
 0. (optional) Launch the App Store and download any updates for macOS. Newer versions of macOS have php and curl included by default
