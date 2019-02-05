@@ -83,7 +83,7 @@ if( strlen( $Token ) !== 32 )
 }
 
 $LocalScriptHash = sha1( trim( file_get_contents( __FILE__ ) ) );
-if (isset($Persona_Name) && $Persona_Name !== 0)
+if( isset($Persona_Name) && $Persona_Name !== 0 )
 {			
 	Msg('Account Name : {teal}' . $Persona_Name . '{normal} - File hash is {teal}' . substr( $LocalScriptHash, 0, 8 ) );
 }
@@ -124,6 +124,7 @@ $OldScore = 0;
 $LastKnownPlanet = 0;
 $BestPlanetAndZone = 0;
 $RandomizeZone = 0;
+$ShowMinorErrors = 0;
 
 if( ini_get( 'precision' ) < 18 )
 {
@@ -132,7 +133,7 @@ if( ini_get( 'precision' ) < 18 )
 
 do
 {
-	$Data = SendPOST( 'ITerritoryControlMinigameService/GetPlayerInfo', 'access_token=' . $Token );
+	$Data = SendPOST( 'ITerritoryControlMinigameService/GetPlayerInfo', 'access_token=' . $Token, $ShowMinorErrors );
 	
 	if( isset( $Data[ 'response' ][ 'score' ] ) )
 	{
@@ -153,7 +154,7 @@ do
 	{
 		do
 		{
-			$BestPlanetAndZone = GetBestPlanetAndZone( $RandomizeZone, $WaitTime, $FailSleep );
+			$BestPlanetAndZone = GetBestPlanetAndZone( $ShowMinorErrors, $RandomizeZone, $WaitTime, $FailSleep );
 		}
 		while( !$BestPlanetAndZone && sleep( $FailSleep ) === 0 );
 	}
@@ -166,13 +167,13 @@ do
 		do
 		{
 			// Leave current game before trying to switch planets (it will report InvalidState otherwise)
-			$SteamThinksPlanet = LeaveCurrentGame( $Token, $FailSleep, $BestPlanetAndZone[ 'id' ] );
+			$SteamThinksPlanet = LeaveCurrentGame( $ShowMinorErrors, $Token, $FailSleep, $BestPlanetAndZone[ 'id' ] );
 			
 			if( $BestPlanetAndZone[ 'id' ] !== $SteamThinksPlanet )
 			{
-				SendPOST( 'ITerritoryControlMinigameService/JoinPlanet', 'id=' . $BestPlanetAndZone[ 'id' ] . '&access_token=' . $Token );
+				SendPOST( 'ITerritoryControlMinigameService/JoinPlanet', 'id=' . $BestPlanetAndZone[ 'id' ] . '&access_token=' . $Token, $ShowMinorErrors );
 				
-				$SteamThinksPlanet = LeaveCurrentGame( $Token, $FailSleep );
+				$SteamThinksPlanet = LeaveCurrentGame( $ShowMinorErrors, $Token, $FailSleep );
 			}
 		}
 		while( $BestPlanetAndZone[ 'id' ] !== $SteamThinksPlanet && sleep( $FailSleep ) === 0 );
@@ -182,7 +183,7 @@ do
 	
 	if( $BestPlanetAndZone[ 'best_zone' ][ 'boss_active' ] )
 	{
-		$Zone = SendPOST( 'ITerritoryControlMinigameService/JoinBossZone', 'zone_position=' . $BestPlanetAndZone[ 'best_zone' ][ 'zone_position' ] . '&access_token=' . $Token );
+		$Zone = SendPOST( 'ITerritoryControlMinigameService/JoinBossZone', 'zone_position=' . $BestPlanetAndZone[ 'best_zone' ][ 'zone_position' ] . '&access_token=' . $Token, $ShowMinorErrors );
 		
 		if( $Zone[ 'eresult' ] != 1 )
 		{
@@ -223,7 +224,7 @@ do
 				$NextHeal = $Time + 120;
 			}
 			
-			$Data = SendPOST( 'ITerritoryControlMinigameService/ReportBossDamage', 'access_token=' . $Token . '&use_heal_ability=' . $UseHeal . '&damage_to_boss=' . $DamageToBoss . '&damage_taken=' . $DamageTaken );
+			$Data = SendPOST( 'ITerritoryControlMinigameService/ReportBossDamage', 'access_token=' . $Token . '&use_heal_ability=' . $UseHeal . '&damage_to_boss=' . $DamageToBoss . '&damage_taken=' . $DamageTaken, $ShowMinorErrors );
 			
 			if( $Data[ 'eresult' ] == 11 )
 			{
@@ -358,13 +359,16 @@ do
 		continue;
 	}
 	
-	$Zone = SendPOST( 'ITerritoryControlMinigameService/JoinZone', 'zone_position=' . $BestPlanetAndZone[ 'best_zone' ][ 'zone_position' ] . '&access_token=' . $Token );
+	$Zone = SendPOST( 'ITerritoryControlMinigameService/JoinZone', 'zone_position=' . $BestPlanetAndZone[ 'best_zone' ][ 'zone_position' ] . '&access_token=' . $Token, $ShowMinorErrors );
 	$PlanetCheckTime = microtime( true );
 	
 	// Rescan planets if joining failed
 	if( empty( $Zone[ 'response' ][ 'zone_info' ] ) )
 	{
-		Msg( '{lightred}!! Failed to join a zone, rescanning and restarting...' );
+		if( $ShowMinorErrors )
+		{
+			Msg( '{lightred}!! Failed to join a zone, rescanning and restarting...' );
+		}
 		
 		$BestPlanetAndZone = 0;
 		
@@ -406,7 +410,7 @@ do
 	
 	do
 	{
-		$BestPlanetAndZone = GetBestPlanetAndZone( $RandomizeZone, $WaitTime, $FailSleep );
+		$BestPlanetAndZone = GetBestPlanetAndZone( $ShowMinorErrors, $RandomizeZone, $WaitTime, $FailSleep );
 	}
 	while( !$BestPlanetAndZone && sleep( $FailSleep ) === 0 );
 	
@@ -428,17 +432,20 @@ do
 		usleep( $LagAdjustedWaitTime * 1000000 );
 	}
 	
-	$Data = SendPOST( 'ITerritoryControlMinigameService/ReportScore', 'access_token=' . $Token . '&score=' . GetScoreForZone( $Zone ) . '&language=english' );
+	$Data = SendPOST( 'ITerritoryControlMinigameService/ReportScore', 'access_token=' . $Token . '&score=' . GetScoreForZone( $Zone ) . '&language=english', $ShowMinorErrors );
 	
 	if( empty( $Data[ 'response' ][ 'new_score' ] ) )
 	{
 		$LagAdjustedWaitTime = max( 1, min( 10, round( $SkippedLagTime ) ) );
 		
-		Msg( '{lightred}-- Report score failed, trying again in ' . $LagAdjustedWaitTime . ' seconds...' );
+		if( $ShowMinorErrors )
+		{
+			Msg( '{lightred}-- Report score failed, trying again in ' . $LagAdjustedWaitTime . ' seconds...' );
+		}
 		
 		sleep( $LagAdjustedWaitTime );
 		
-		$Data = SendPOST( 'ITerritoryControlMinigameService/ReportScore', 'access_token=' . $Token . '&score=' . GetScoreForZone( $Zone ) . '&language=english' );
+		$Data = SendPOST( 'ITerritoryControlMinigameService/ReportScore', 'access_token=' . $Token . '&score=' . GetScoreForZone( $Zone ) . '&language=english', $ShowMinorErrors );
 	}
 	
 	if( isset( $Data[ 'response' ][ 'new_score' ] ) )
@@ -586,9 +593,9 @@ function GetNameForDifficulty( $Zone )
 	return $Boss . $Difficulty;
 }
 
-function GetPlanetState( $Planet, $RandomizeZone, $WaitTime )
+function GetPlanetState( $ShowMinorErrors, $Planet, $RandomizeZone, $WaitTime )
 {
-	$Zones = SendGET( 'ITerritoryControlMinigameService/GetPlanet', 'id=' . $Planet . '&language=english' );
+	$Zones = SendGET( 'ITerritoryControlMinigameService/GetPlanet', 'id=' . $Planet . '&language=english', $ShowMinorErrors );
 	
 	if( empty( $Zones[ 'response' ][ 'planets' ][ 0 ][ 'zones' ] ) )
 	{
@@ -687,9 +694,9 @@ bossLabel:
 	];
 }
 
-function GetBestPlanetAndZone( $RandomizeZone, $WaitTime, $FailSleep )
+function GetBestPlanetAndZone( $ShowMinorErrors, $RandomizeZone, $WaitTime, $FailSleep )
 {
-	$Planets = SendGET( 'ITerritoryControlMinigameService/GetPlanets', 'active_only=1&language=english' );
+	$Planets = SendGET( 'ITerritoryControlMinigameService/GetPlanets', 'active_only=1&language=english', $ShowMinorErrors );
 	
 	CheckGameVersion( $Planets );
 	
@@ -729,7 +736,7 @@ function GetBestPlanetAndZone( $RandomizeZone, $WaitTime, $FailSleep )
 		
 		do
 		{
-			$Zone = GetPlanetState( $Planet[ 'id' ], $RandomizeZone, $WaitTime );
+			$Zone = GetPlanetState( $ShowMinorErrors, $Planet[ 'id' ], $RandomizeZone, $WaitTime );
 		}
 		while( $Zone === null && sleep( $FailSleep ) === 0 );
 		
@@ -807,20 +814,20 @@ function GetBestPlanetAndZone( $RandomizeZone, $WaitTime, $FailSleep )
 	return $Planet;
 }
 
-function LeaveCurrentGame( $Token, $FailSleep, $LeaveCurrentPlanet = 0 )
+function LeaveCurrentGame( $ShowMinorErrors, $Token, $FailSleep, $LeaveCurrentPlanet = 0 )
 {
 	do
 	{
-		$Data = SendPOST( 'ITerritoryControlMinigameService/GetPlayerInfo', 'access_token=' . $Token );
+		$Data = SendPOST( 'ITerritoryControlMinigameService/GetPlayerInfo', 'access_token=' . $Token, $ShowMinorErrors );
 		
 		if( isset( $Data[ 'response' ][ 'active_zone_game' ] ) )
 		{
-			SendPOST( 'IMiniGameService/LeaveGame', 'access_token=' . $Token . '&gameid=' . $Data[ 'response' ][ 'active_zone_game' ] );
+			SendPOST( 'IMiniGameService/LeaveGame', 'access_token=' . $Token . '&gameid=' . $Data[ 'response' ][ 'active_zone_game' ], $ShowMinorErrors );
 		}
 		
 		if( isset( $Data[ 'response' ][ 'active_boss_game' ] ) )
 		{
-			SendPOST( 'IMiniGameService/LeaveGame', 'access_token=' . $Token . '&gameid=' . $Data[ 'response' ][ 'active_boss_game' ] );
+			SendPOST( 'IMiniGameService/LeaveGame', 'access_token=' . $Token . '&gameid=' . $Data[ 'response' ][ 'active_boss_game' ], $ShowMinorErrors );
 		}
 	}
 	while( !isset( $Data[ 'response' ][ 'score' ] ) && sleep( $FailSleep ) === 0 );
@@ -839,20 +846,20 @@ function LeaveCurrentGame( $Token, $FailSleep, $LeaveCurrentPlanet = 0 )
 		
 		echo PHP_EOL;
 		
-		SendPOST( 'IMiniGameService/LeaveGame', 'access_token=' . $Token . '&gameid=' . $ActivePlanet );
+		SendPOST( 'IMiniGameService/LeaveGame', 'access_token=' . $Token . '&gameid=' . $ActivePlanet, $ShowMinorErrors );
 	}
 	
 	return $ActivePlanet;
 }
 
-function SendPOST( $Method, $Data )
+function SendPOST( $Method, $Data, $ShowMinorErrors )
 {
-	return ExecuteRequest( $Method, 'https://community.steam-api.com/' . $Method . '/v0001/', $Data );
+	return ExecuteRequest( $ShowMinorErrors, $Method, 'https://community.steam-api.com/' . $Method . '/v0001/', $Data );
 }
 
-function SendGET( $Method, $Data )
+function SendGET( $Method, $Data, $ShowMinorErrors )
 {
-	return ExecuteRequest( $Method, 'https://community.steam-api.com/' . $Method . '/v0001/?' . $Data );
+	return ExecuteRequest( $ShowMinorErrors, $Method, 'https://community.steam-api.com/' . $Method . '/v0001/?' . $Data );
 }
 
 function GetCurl( )
@@ -881,7 +888,7 @@ function GetCurl( )
 		],
 	] );
 	
-	if ( !empty( $_SERVER[ 'LOCAL_ADDRESS' ] ) )
+	if( !empty( $_SERVER[ 'LOCAL_ADDRESS' ] ) )
 	{
 		curl_setopt( $c, CURLOPT_INTERFACE, $_SERVER[ 'LOCAL_ADDRESS' ] );
 	}
@@ -894,7 +901,7 @@ function GetCurl( )
 	return $c;
 }
 
-function ExecuteRequest( $Method, $URL, $Data = [] )
+function ExecuteRequest( $ShowMinorErrors, $Method, $URL, $Data = [] )
 {
 	$c = GetCurl( );
 	
@@ -922,11 +929,14 @@ function ExecuteRequest( $Method, $URL, $Data = [] )
 		
 		if( $EResult !== 1 )
 		{
-			Msg( '{lightred}!! ' . $Method . ' failed - EResult: ' . $EResult . ' - ' . $Data );
-			
-			if( preg_match( '/^[Xx]-error_message: (?:.+)$/m', $Header, $ErrorMessage ) === 1 )
+			if( $ShowMinorErrors && $EResult !== 0 && $EResult !== 10)
 			{
-				Msg( '{lightred}!! API failed - ' . $ErrorMessage[ 0 ] );
+				Msg( '{lightred}!! ' . $Method . ' failed - EResult: ' . $EResult . ' - ' . $Data );
+			
+				if( preg_match( '/^[Xx]-error_message: (?:.+)$/m', $Header, $ErrorMessage ) === 1 )
+				{
+					Msg( '{lightred}!! API failed - ' . $ErrorMessage[ 0 ] );
+				}
 			}
 			
 			if( $EResult === 15 && $Method === 'ITerritoryControlMinigameService/RepresentClan' )  // EResult.AccessDenied
@@ -946,13 +956,16 @@ function ExecuteRequest( $Method, $URL, $Data = [] )
 			}
 			else if( $EResult === 0 ) // Timeout
 			{
-				Msg( '{lightred}-- This problem should resolve itself, wait for a couple of minutes' );
+				if( $ShowMinorErrors )
+				{
+					Msg( '{lightred}-- This problem should resolve itself, wait for a couple of minutes' );
+				}
 			}
 			else if( $EResult === 10 ) // EResult.Busy
 			{
 				$Data = '{}'; // Retry this exact request
 				
-				Msg( '{lightred}-- EResult 10 means Steam is busy' );
+				Msg( '{lightred}-- Steam is busy...' );
 				
 				sleep( 5 );
 			}
