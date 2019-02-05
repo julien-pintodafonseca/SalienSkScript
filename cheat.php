@@ -42,12 +42,12 @@ if( $argc > 1 )
 }
 else if( isset( $_SERVER[ 'TOKEN' ] ) )
 {
-	// if the token was provided as an env var, use it
+	// If the token was provided as an env var, use it
 	$Token = $_SERVER[ 'TOKEN' ];
 }
 else
 {
-	// otherwise, read it from disk
+	// Otherwise, read it from disk
 	$Token = trim( file_get_contents( __DIR__ . '/token.txt' ) );
 	$ParsedToken = json_decode( $Token, true );
 	
@@ -103,7 +103,6 @@ else
 	$RepositoryScriptHash = GetRepositoryScriptHash( $RepositoryScriptETag, $LocalScriptHash );
 }
 
-// 10/10 code
 $DisableColors = !(
 	( function_exists( 'sapi_windows_vt100_support' ) && sapi_windows_vt100_support( STDOUT ) ) ||
 	( function_exists( 'stream_isatty' ) && stream_isatty( STDOUT ) ) ||
@@ -128,7 +127,6 @@ $RandomizeZone = 0;
 
 if( ini_get( 'precision' ) < 18 )
 {
-	//Msg( '{teal}Fixed php float precision (was ' . ini_get( 'precision' ) . ')' );
 	ini_set( 'precision', '18' );
 }
 
@@ -145,20 +143,6 @@ do
 		Msg( '{green}--{yellow} https://steamcommunity.com/saliengame/play' );
 		Msg( '{green}-- SalienSkScript starts!' );
 		echo PHP_EOL;
-		
-		// Randomizer is here to help reduce load on Steam servers
-		// Zones are sharded, and if everyone targets the same zone, it ends up worse for everyone
-		// By giving errors like time not synced or failed to join.
-		// Everyone at level 21 or above already has their Rank 6 badge
-		// So please don't change this and let's get this mini game over with
-		/*
-		if( $Data[ 'response' ][ 'level' ] >= 21 )
-		{
-			$RandomizeZone = 1;
-			
-			Msg( '{yellow}-- You will be joining random zones to reduce Steam server load and help capture planets faster' );
-		}
-		*/
 	}
 }
 while( !isset( $Data[ 'response' ][ 'score' ] ) && sleep( $FailSleep ) === 0 );
@@ -333,7 +317,7 @@ do
 		}
 		while( BossSleep( $c ) );
 		
-		//After a boss battle : reset state and scan again
+		// After a boss battle : reset state and scan again
 		$BestPlanetAndZone = 0;
 		$LastKnownPlanet = 0;
 		
@@ -470,13 +454,6 @@ do
 				'{normal} - ETA: {green}' . $Hours . 'h ' . $Minutes . 'm (' . date_format( $Date , "jS H:i T" ) . ')'
 			);
 		}
-		
-		/*
-		if( $Data[ 'new_level' ] >= 21 )
-		{
-			$RandomizeZone = 1;
-		}
-		*/
 	}
 }
 while( true );
@@ -943,7 +920,7 @@ function ExecuteRequest( $Method, $URL, $Data = [] )
 				global $LastKnownPlanet;
 				$LastKnownPlanet = 0;
 			}
-			else if( $EResult === 0 ) // timeout
+			else if( $EResult === 0 ) // Timeout
 			{
 				Msg( '{lightred}-- This problem should resolve itself, wait for a couple of minutes' );
 			}
