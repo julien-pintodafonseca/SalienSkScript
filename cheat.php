@@ -338,7 +338,7 @@ do
 			Msg(
 				'++ Your Score after Boss battle: {lightred}' . number_format( $MyScoreInBoss ) .
 				'{yellow} (+' . number_format( $MyScoreInBoss - $OldScore ) . ')' .
-				'{normal} - Level: {green}' . $Data[ 'level' ]
+				'{normal} - Level: {green}' . $Data[ 'response' ][ 'level' ]
 			);
 			
 			$OldScore = $MyScoreInBoss;
